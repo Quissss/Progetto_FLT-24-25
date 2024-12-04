@@ -17,18 +17,25 @@ public class Scanner {
 	private PushbackReader buffer;
 	private String log;
 	private Token current;
+	
+	/** insieme di caratteri non considerati dallo scanner (incluso EOF) */
+	public HashSet<Character> skpChars; 
+	/** insieme di lettere dell'alfabeto */
+	public HashSet<Character> letters; 
+	/** insieme di cifre */
+	public HashSet<Character> digits; 
 
-	public HashSet<Character> skpChars; // insieme di caratteri non considerati dallo scanner (incluso EOF)
-	public HashSet<Character> letters; // insieme di lettere dell'alfabeto
-	public HashSet<Character> digits; /* insieme di cifre */
+	
+	/** mapping fra caratteri '+', '-', '*', '/' e il TokenType corrispondente */
+	private HashMap<Character, TokenType> operTkType; 
+	/** mapping fra caratteri '=', ';' e il e il TokenType corrispondente */
+	private HashMap<Character, TokenType> delimTkType; 
+	/** mapping fra le stringhe "print", "float", "int" e il TokenType corrispondente */
+	private HashMap<String, TokenType> keyWordsTkType; 
 
-	private HashMap<Character, TokenType> operTkType; // mapping fra caratteri '+', '-', '*', '/' e il TokenType
-														// corrispondente
-	private HashMap<Character, TokenType> delimTkType; // mapping fra caratteri '=', ';' e il e il TokenType
-														// corrispondente
-	private HashMap<String, TokenType> keyWordsTkType; // mapping fra le stringhe "print", "float", "int" e il TokenType
-														// corrispondente
-
+	/**
+	 * Inizializza il costruttore
+	 */
 	public Scanner(String fileName) throws FileNotFoundException {
 
 		this.buffer = new PushbackReader(new FileReader(fileName));
@@ -49,7 +56,7 @@ public class Scanner {
 		skpChars.add('\n');
 		skpChars.add('\t');
 		skpChars.add('\r');
-		skpChars.add('\0'); // EOF
+		skpChars.add(EOF);
 
 		/* Inizializza il set letters */
 		letters = new HashSet<Character>();
@@ -85,9 +92,9 @@ public class Scanner {
 	public Token nextToken() throws LexicalException, IOException {
 
 		if (current != null) {
-			Token t = current;
+			Token token = current;
 			current = null;
-			return t;
+			return token;
 		}
 		char nextChar;
 		nextChar = peekChar();
