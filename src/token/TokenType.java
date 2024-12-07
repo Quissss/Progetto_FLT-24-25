@@ -62,7 +62,7 @@ public enum TokenType {
     /**
      * Token di assegnazione per il simbolo "/"
      */
-    DIV,
+    DIVIDE,
     
     /**
      * Token di assegnazione per il simbolo ";"

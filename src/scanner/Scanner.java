@@ -89,7 +89,7 @@ public class Scanner {
 		operTkType.put('+', TokenType.PLUS);
 		operTkType.put('-', TokenType.MINUS);
 		operTkType.put('*', TokenType.TIMES);
-		operTkType.put('/', TokenType.DIV);
+		operTkType.put('/', TokenType.DIVIDE);
 
 		/* Inizializza l'hashmap delimTkType */
 		delimTkType = new HashMap<Character, TokenType>();
