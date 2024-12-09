@@ -12,8 +12,6 @@ class TestToken {
 	@Test
 	void test() {
 		
-		
-		
 	}
 
 }
