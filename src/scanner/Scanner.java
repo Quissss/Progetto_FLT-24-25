@@ -16,6 +16,8 @@ import token.*;
  * carattere per generare i relativi token che saranno utilizzati da un parser.
  * Gli operatori, le parole chiave, gli identificatori e i numeri vengono
  * riconosciuti e restituiti come token corrispondenti.
+ * 
+ * @author Benetti Luca 20043903
  */
 public class Scanner {
 
@@ -45,9 +47,9 @@ public class Scanner {
 	 * i set e le mappe necessarie per il riconoscimento dei token.
 	 * 
 	 * @param fileName il nome del file da scansionare
-	 * @throws FileNotFoundException se il file non può essere trovato
+	 * @throws IOException se il file non può essere trovato
 	 */
-	public Scanner(String fileName) throws FileNotFoundException {
+	public Scanner(String fileName) throws IOException {
 
 		this.buffer = new PushbackReader(new FileReader(fileName));
 		riga = 1;
@@ -103,9 +105,7 @@ public class Scanner {
 	}
 
 	/**
-	 * Ritorna il prossimo token nel file di input, scansionando il file carattere
-	 * per carattere. Gestisce gli spazi, le parole chiave, gli identificatori, gli
-	 * operatori, i numeri e i delimitatori.
+	 * Ritorna il prossimo token nel file di input. (Stato 0)
 	 * 
 	 * @return il prossimo token trovato
 	 * @throws LexicalException se il token non è valido
@@ -113,34 +113,35 @@ public class Scanner {
 	 *                          del file
 	 */
 	public Token nextToken() throws LexicalException, IOException {
-		// Salta i caratteri non rilevanti (spazi, tabulazioni, ritorni a capo) (1)
+		// Salta i caratteri non rilevanti (spazi, tabulazioni, ritorni a capo) (Stato 1)
 		while (skpChars.contains(peekChar())) {
 			if (peekChar() == '\n') {
 				riga++; // Incrementa la riga se trovi un ritorno a capo
 			}
 			readChar();
-			// Se raggiungi la fine del file, ritorna un Token EOF
+			// Se raggiungi la fine del file, ritorna un Token EOF 
 			if (peekChar() == EOF) {
 				readChar();
 				return new Token(TokenType.EOF, riga);
 			}
 		}
 
-		// Scansiona i numeri (interi o decimali) (2)
+		// Scansiona i numeri (interi o decimali) (Stato 2)
 		if (digits.contains(peekChar())) {
 			return scanNumber();
 		}
 
-		// Scansiona gli identificatori o le parole chiave (3)
+		// Scansiona gli identificatori o le parole chiave (Stato 3)
 		if (letters.contains(peekChar())) {
 			return scanId();
 		}
 
-		// Scansiona gli operatori (4)
+		// Scansiona gli operatori (Stato 4)
 		if (operTkType.containsKey(peekChar())) {
 			return scanOperator();
 		}
 
+		// (Stato 5)
 		if (delimTkType.containsKey(peekChar())) {
 			return new Token(delimTkType.get(readChar()), riga); // Restituisce il token associato al delimitatore
 		}
@@ -150,14 +151,13 @@ public class Scanner {
 		while ((!delimTkType.containsKey(peekChar()) && !skpChars.contains(peekChar())) && peekChar() != '\n') {
 			sb.append(readChar());
 		}
-
+		
+		// (Stato 9)
 		throw new LexicalException(riga, sb.toString());
 	}
 
 	/**
-	 * Scansiona un identificatore o una parola chiave. Un identificatore può essere
-	 * una parola chiave (come "int", "float", "print") o un identificatore
-	 * generico.
+	 * Scansiona un identificatore o una parola chiave.
 	 * 
 	 * @return il token identificatore o parola chiave
 	 * @throws IOException se si verifica un errore di lettura
@@ -193,6 +193,7 @@ public class Scanner {
 		TokenType type = operTkType.get(opChar);
 
 		if (peekChar() == '=' && type != null) {
+			// (Stato 8)
 			StringBuilder sb = new StringBuilder();
 			sb.append(opChar);
 			sb.append(readChar());
@@ -223,8 +224,11 @@ public class Scanner {
 			numberValue.append(readChar());
 		}
 
+		
 		if (peekChar() == '.') {
+			// (Stato 6)
 			numberValue.append(readChar());
+			// (Stato 7)
 			while (digits.contains(peekChar())) {
 				numberValue.append(readChar());
 				conta++;
