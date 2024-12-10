@@ -14,10 +14,10 @@ import token.TokenType;
 class TestScanner {
 
 	@Test
-	void testCaratteriNonCaratteri() throws IOException,LexicalException {
+	void testCaratteriNonCaratteri() throws IOException, LexicalException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/CaratteriNonCaratteri.txt");
 		LexicalException e;
-		
+
 		e = assertThrows(LexicalException.class, scanner::nextToken);
 		assertEquals("Errore lessicale alla riga 1: sequenza di caratteri '^' non valida", e.getMessage());
 		e = assertThrows(LexicalException.class, scanner::nextToken);
@@ -27,9 +27,9 @@ class TestScanner {
 		assertEquals("Errore lessicale alla riga 2: sequenza di caratteri '|' non valida", e.getMessage());
 		assertEquals(TokenType.PLUS, scanner.nextToken().getType());
 		assertEquals(TokenType.EOF, scanner.nextToken().getType());
-				
+
 	}
-	
+
 	@Test
 	void testSkipChars() throws IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/caratteriSkip.txt");
@@ -37,12 +37,12 @@ class TestScanner {
 		assertEquals(TokenType.EOF, token.getType());
 		assertEquals(5, token.getRow());
 	}
-	
+
 	@Test
 	void testErroriNumbers() throws LexicalException, IOException {
 		LexicalException e;
 		Scanner scanner = new Scanner("src/test/data/TestScanner/erroriNumbers.txt");
-		
+
 		assertEquals("0", scanner.nextToken().getValue());
 		assertEquals("33", scanner.nextToken().getValue());
 		e = assertThrows(LexicalException.class, scanner::nextToken);
@@ -51,14 +51,14 @@ class TestScanner {
 		assertEquals(t, new Token(TokenType.FLOAT, 5, "123.123"));
 		assertThrows(LexicalException.class, scanner::nextToken);
 		assertEquals(TokenType.EOF, scanner.nextToken().getType());
-		
+
 	}
-	
+
 	@Test
 	void testEOF() throws LexicalException, IOException {
-		Scanner scanner = new Scanner("src/test/data/TestScanner/testEOF.txt");	
+		Scanner scanner = new Scanner("src/test/data/TestScanner/testEOF.txt");
 		assertEquals(TokenType.EOF, scanner.nextToken().getType());
-		
+
 	}
 
 	@Test
@@ -69,25 +69,25 @@ class TestScanner {
 		assertEquals("0.", scanner.nextToken().getValue());
 		assertEquals("98.", scanner.nextToken().getValue());
 		assertEquals("89.99999", scanner.nextToken().getValue());
-		assertEquals(TokenType.EOF, scanner.nextToken().getType());		
+		assertEquals(TokenType.EOF, scanner.nextToken().getType());
 	}
-	
+
 	@Test
 	void testFLOATToken() throws LexicalException, IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testFloat.txt");
-		Token t = new Token(TokenType.FLOAT, 1 , "098.8095");
-		Token t2 = new Token(TokenType.FLOAT, 2 , "0.");
-		Token t3 = new Token(TokenType.FLOAT, 3 , "98.");
-		Token t4 = new Token(TokenType.FLOAT, 5 , "89.99999");
-		Token t5 = new Token(TokenType.EOF, 5 );
-		
-		assertEquals(t , scanner.nextToken());
-		assertEquals(t2 , scanner.nextToken());
-		assertEquals(t3 , scanner.nextToken());
-		assertEquals(t4 , scanner.nextToken());
-		assertEquals(t5 , scanner.nextToken());
+		Token t = new Token(TokenType.FLOAT, 1, "098.8095");
+		Token t2 = new Token(TokenType.FLOAT, 2, "0.");
+		Token t3 = new Token(TokenType.FLOAT, 3, "98.");
+		Token t4 = new Token(TokenType.FLOAT, 5, "89.99999");
+		Token t5 = new Token(TokenType.EOF, 5);
+
+		assertEquals(t, scanner.nextToken());
+		assertEquals(t2, scanner.nextToken());
+		assertEquals(t3, scanner.nextToken());
+		assertEquals(t4, scanner.nextToken());
+		assertEquals(t5, scanner.nextToken());
 	}
-	
+
 	@Test
 	void testGenerale() throws IOException, LexicalException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testGenerale.txt");
@@ -118,7 +118,7 @@ class TestScanner {
 
 		assertEquals("<EOF,r:7>", scanner.nextToken().toString());
 	}
-	
+
 	@Test
 	void testId() throws IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testId.txt");
@@ -192,8 +192,7 @@ class TestScanner {
 		assertEquals(6, token.getRow());
 		assertEquals(TokenType.EOF, token.getType());
 	}
-	
-	
+
 	@Test
 	void testINT() throws LexicalException, IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testint.txt");
@@ -202,65 +201,90 @@ class TestScanner {
 		assertEquals("698", scanner.nextToken().getValue());
 		assertEquals("560099", scanner.nextToken().getValue());
 		assertEquals("1234", scanner.nextToken().getValue());
-		assertEquals(TokenType.EOF, scanner.nextToken().getType());		
+		assertEquals(TokenType.EOF, scanner.nextToken().getType());
 	}
-	
+
 	@Test
 	void testINTToken() throws LexicalException, IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testint.txt");
-		Token t = new Token(TokenType.INT, 1 , "0050");
-		Token t2 = new Token(TokenType.INT, 2 , "698");
-		Token t3 = new Token(TokenType.INT, 4 , "560099");
-		Token t4 = new Token(TokenType.INT, 5 , "1234");
-		Token t5 = new Token(TokenType.EOF, 5 );
-		
-		assertEquals(t , scanner.nextToken());
-		assertEquals(t2 , scanner.nextToken());
-		assertEquals(t3 , scanner.nextToken());
-		assertEquals(t4 , scanner.nextToken());
-		assertEquals(t5 , scanner.nextToken());
-	
+		Token t = new Token(TokenType.INT, 1, "0050");
+		Token t2 = new Token(TokenType.INT, 2, "698");
+		Token t3 = new Token(TokenType.INT, 4, "560099");
+		Token t4 = new Token(TokenType.INT, 5, "1234");
+		Token t5 = new Token(TokenType.EOF, 5);
+
+		assertEquals(t, scanner.nextToken());
+		assertEquals(t2, scanner.nextToken());
+		assertEquals(t3, scanner.nextToken());
+		assertEquals(t4, scanner.nextToken());
+		assertEquals(t5, scanner.nextToken());
+
 	}
-	
+
 	@Test
 	void testKeyWords() throws LexicalException, IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testKeyWords.txt");
-		Token t = new Token(TokenType.PRINT, 2 );
-		Token t2 = new Token(TokenType.TYFLOAT, 2 );
-		Token t3 = new Token(TokenType.TYINT, 5 );
-		Token t4 = new Token(TokenType.EOF, 5 );
-		
-		assertEquals(t , scanner.nextToken());
-		assertEquals(t2 , scanner.nextToken());
-		assertEquals(t3 , scanner.nextToken());
-		assertEquals(t4 , scanner.nextToken());
-		
+		Token t = new Token(TokenType.PRINT, 2);
+		Token t2 = new Token(TokenType.TYFLOAT, 2);
+		Token t3 = new Token(TokenType.TYINT, 5);
+		Token t4 = new Token(TokenType.EOF, 5);
+
+		assertEquals(t, scanner.nextToken());
+		assertEquals(t2, scanner.nextToken());
+		assertEquals(t3, scanner.nextToken());
+		assertEquals(t4, scanner.nextToken());
+
 	}
-	
+
 	@Test
 	void testOpsDels() throws LexicalException, IOException {
 		Scanner scanner = new Scanner("src/test/data/TestScanner/testOpsDels.txt");
-		
+
 		assertEquals("<PLUS,r:1>", scanner.nextToken().toString());
 		assertEquals("<OP_ASSIGN,r:1,/=>", scanner.nextToken().toString());
-		
+
 		assertEquals("<MINUS,r:2>", scanner.nextToken().toString());
 		assertEquals("<TIMES,r:2>", scanner.nextToken().toString());
-		
+
 		assertEquals("<DIVIDE,r:3>", scanner.nextToken().toString());
-		
+
 		assertEquals("<OP_ASSIGN,r:5,+=>", scanner.nextToken().toString());
-		
+
 		assertEquals("<ASSIGN,r:6>", scanner.nextToken().toString());
 		assertEquals("<OP_ASSIGN,r:6,-=>", scanner.nextToken().toString());
-		
+
 		assertEquals("<MINUS,r:8>", scanner.nextToken().toString());
 		assertEquals("<ASSIGN,r:8>", scanner.nextToken().toString());
 		assertEquals("<OP_ASSIGN,r:8,*=>", scanner.nextToken().toString());
-		
+
 		assertEquals("<SEMI,r:10>", scanner.nextToken().toString());
 		assertEquals("<EOF,r:10>", scanner.nextToken().toString());
-		
+
 	}
-	
+
+	@Test
+	void peekToken() throws IOException, LexicalException {
+		Scanner s = new Scanner("src/test/data/TestScanner/testGenerale.txt");
+		assertEquals(s.peekToken().getType(), TokenType.TYINT );
+		assertEquals(s.nextToken().getType(), TokenType.TYINT );
+		assertEquals(s.peekToken().getType(), TokenType.ID );
+		assertEquals(s.peekToken().getType(), TokenType.ID );
+		Token t = s.nextToken();
+		assertEquals(t.getType(), TokenType.ID);
+		assertEquals(t.getRow(), 1);
+		assertEquals(t.getValue(), "temp");
+		
+		assertEquals(s.peekToken().getType(), TokenType.SEMI );
+		Token t1 = s.nextToken();
+		assertEquals(t1.getType(), TokenType.SEMI);
+		assertEquals(t1.getRow(), 1);
+		
+		assertEquals(s.nextToken().getType(), TokenType.ID );
+		assertEquals(s.nextToken().getType(), TokenType.OP_ASSIGN);
+		
+		Token t2 = s.nextToken();
+		assertEquals(t2.getType(), TokenType.FLOAT);
+		assertEquals(t2.getRow(), 2);
+	}
+
 }

@@ -1,5 +1,6 @@
 package scanner;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -23,7 +24,7 @@ public class Scanner {
 	static final char EOF = (char) -1;
 	private int riga;
 	private PushbackReader buffer;
-	private Token current;
+	private Token nextTk;
 
 	/** insieme di caratteri non considerati dallo scanner (incluso EOF) */
 	private Set<Character> skpChars;
@@ -46,13 +47,13 @@ public class Scanner {
 	 * i set e le mappe necessarie per il riconoscimento dei token.
 	 * 
 	 * @param fileName il nome del file da scansionare
-	 * @throws IOException se il file non può essere trovato
+	 * @throws FileNotFoundException se il file non può essere trovato
 	 */
-	public Scanner(String fileName) throws IOException {
+	public Scanner(String fileName) throws FileNotFoundException  {
 
 		this.buffer = new PushbackReader(new FileReader(fileName));
 		riga = 1;
-		this.current = null;
+		this.nextTk = null;
 
 		config();
 
@@ -108,10 +109,15 @@ public class Scanner {
 	 * 
 	 * @return il prossimo token trovato
 	 * @throws LexicalException se il token non è valido
-	 * @throws IOException      se si verifica un errore di I/O durante la lettura
-	 *                          del file
 	 */
-	public Token nextToken() throws LexicalException, IOException {
+	public Token nextToken() throws LexicalException {
+		
+		if (nextTk != null) {
+			Token t = nextTk;
+			nextTk = null;
+			return t;
+		}
+		
 		// Salta i caratteri non rilevanti (spazi, tabulazioni, ritorni a capo) (Stato 1)
 		while (skpChars.contains(peekChar())) {
 			if (peekChar() == '\n') {
@@ -159,9 +165,9 @@ public class Scanner {
 	 * Scansiona un identificatore o una parola chiave.
 	 * 
 	 * @return il token identificatore o parola chiave
-	 * @throws IOException se si verifica un errore di lettura
+	 * @throws LexicalException se id non è valido
 	 */
-	private Token scanId() throws IOException {
+	private Token scanId() throws LexicalException {
 		StringBuilder idValue = new StringBuilder();
 		idValue.append(readChar());
 
@@ -182,10 +188,9 @@ public class Scanner {
 	 * operazioni con assegnamento (+=, -=, /=, *=)
 	 * 
 	 * @return il token dell'operatore trovato
-	 * @throws IOException      se si verifica un errore di lettura
 	 * @throws LexicalException se l'operatore non è valido
 	 */
-	private Token scanOperator() throws IOException, LexicalException {
+	private Token scanOperator() throws  LexicalException {
 		char opChar = readChar(); // Leggi il carattere dell'operatore
 
 		// Se è un operatore base come +, -, *, /, ritorna il relativo token
@@ -211,10 +216,9 @@ public class Scanner {
 	 * 123) o decimali (es. 12.34).
 	 * 
 	 * @return il token del numero trovato
-	 * @throws IOException      se si verifica un errore di lettura
 	 * @throws LexicalException se il numero non è valido
 	 */
-	private Token scanNumber() throws IOException, LexicalException {
+	private Token scanNumber() throws  LexicalException {
 		StringBuilder numberValue = new StringBuilder();
 		numberValue.append(readChar());
 		int conta = 0;
@@ -248,10 +252,14 @@ public class Scanner {
 	 * Legge il prossimo carattere dal buffer di input.
 	 * 
 	 * @return il carattere successivo presente nel buffer
-	 * @throws IOException se si verifica un errore durante la lettura del buffer
+	 * @throws LexicalException  Tutte le eccezioni
 	 */
-	private char readChar() throws IOException {
-		return ((char) this.buffer.read());
+	private char readChar() throws  LexicalException {
+		try {
+			return ((char) this.buffer.read());
+		} catch (IOException e) {
+			throw new LexicalException(e);
+		}
 	}
 
 	/**
@@ -260,13 +268,29 @@ public class Scanner {
 	 * invariato.
 	 * 
 	 * @return il carattere successivo presente nel buffer
-	 * @throws IOException se si verifica un errore durante la lettura o
-	 *                     l'annullamento della lettura
+	 * @throws LexicalException Tutte le eccezioni
 	 */
-	private char peekChar() throws IOException {
-		char c = (char) buffer.read();
-		buffer.unread(c);
-		return c;
+	private char peekChar() throws  LexicalException {	
+		char c = 0;
+		try {
+			c = (char) buffer.read();
+			buffer.unread(c);
+		} catch (IOException e) {
+			throw new LexicalException(e);
+		}
+		return c;	
+	}
+	
+	/**
+	 * Restituisce il prossimo token, ma non consuma l’input. 
+	 * @return un token
+	 * @throws LexicalException  Tutte le eccezioni
+	 */
+	public Token peekToken() throws LexicalException {
+		if (nextTk == null) {
+			nextTk = nextToken();
+		}
+		return nextTk;
 	}
 
 }

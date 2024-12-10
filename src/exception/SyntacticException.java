@@ -5,6 +5,11 @@ import token.TokenType;
 public class SyntacticException extends Exception {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Costruttore per SyntacticException con riga, token atteso  e token ottenuto.
 	 * 
 	 * @param row   la riga dell'errore
@@ -23,5 +28,18 @@ public class SyntacticException extends Exception {
 	public SyntacticException(String msg) {
 		super(msg);
 	}
+	
+	
+	/**
+	 * Costruttore per SyntacticException con riga, string atteso  e token ottenuto.
+	 * 
+	 * @param row la riga dell'errore
+	 * @param string il token atteso
+	 * @param type il token 
+	 */
+	public SyntacticException(int row, String string, TokenType type) {
+		super("Errore sintattico a riga " + row + ": atteso " + string + ", ma è " + type);
+	}
+
 
 }

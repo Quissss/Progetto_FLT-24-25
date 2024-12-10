@@ -1,8 +1,15 @@
 package exception;
 
+
+
 public class LexicalException extends Exception {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Costruttore per creare un'eccezione lessicale con la sola riga.
      * 
      * @param row la riga in cui si è verificato l'errore
@@ -32,5 +39,15 @@ public class LexicalException extends Exception {
     public LexicalException(int row, String id) {
         super("Errore lessicale alla riga " + row + ": sequenza di caratteri '" + id + "' non valida");
     }
+
+    /**
+     * Costruttore per creare un'eccezione wrappata
+     * 
+     * @param message dell eccezione
+     * @param e Eccezione incapsulata
+     */
+	public LexicalException( Throwable e) {
+		super("Eccezione: " + e.getMessage(), e);
+	}
 
 }
