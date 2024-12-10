@@ -1,5 +1,7 @@
 package token;
 
+import java.util.Objects;
+
 /**
  * Classe che rappresenta un token nel processo di analisi lessicale.
  */
@@ -85,4 +87,22 @@ public class Token {
         builder.append(">");
         return builder.toString();
     }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(row, type, value);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Token))
+			return false;
+		Token other = (Token) obj;
+		return row == other.row && type == other.type && Objects.equals(value, other.value);
+	}
+    
+    
+    
 }

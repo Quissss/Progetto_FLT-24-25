@@ -13,12 +13,9 @@ import token.*;
 
 /**
  * La classe Scanner si occupa di scansionare un file di input carattere per
- * carattere
- * per generare i relativi token che saranno utilizzati da un parser. Gli
- * operatori,
- * le parole chiave, gli identificatori e i numeri vengono riconosciuti e
- * restituiti
- * come token corrispondenti.
+ * carattere per generare i relativi token che saranno utilizzati da un parser.
+ * Gli operatori, le parole chiave, gli identificatori e i numeri vengono
+ * riconosciuti e restituiti come token corrispondenti.
  */
 public class Scanner {
 
@@ -62,10 +59,8 @@ public class Scanner {
 
 	/**
 	 * Inizializza i set e le mappe per lo scanner. Definisce i caratteri da
-	 * saltare,
-	 * i caratteri alfabetici e numerici, i token per gli operatori, i delimitatori
-	 * e
-	 * le parole chiave.
+	 * saltare, i caratteri alfabetici e numerici, i token per gli operatori, i
+	 * delimitatori e le parole chiave.
 	 */
 	private void config() {
 		/* Inizializza il set skpChars */
@@ -109,10 +104,8 @@ public class Scanner {
 
 	/**
 	 * Ritorna il prossimo token nel file di input, scansionando il file carattere
-	 * per carattere.
-	 * Gestisce gli spazi, le parole chiave, gli identificatori, gli operatori, i
-	 * numeri
-	 * e i delimitatori.
+	 * per carattere. Gestisce gli spazi, le parole chiave, gli identificatori, gli
+	 * operatori, i numeri e i delimitatori.
 	 * 
 	 * @return il prossimo token trovato
 	 * @throws LexicalException se il token non è valido
@@ -133,32 +126,37 @@ public class Scanner {
 			}
 		}
 
-		// // Scansiona i numeri (interi o decimali) (2)
-		// if (digits.contains(nextChar)) {
-		// 	return scanNumber();
-		// }
+		// Scansiona i numeri (interi o decimali) (2)
+		if (digits.contains(peekChar())) {
+			return scanNumber();
+		}
 
 		// Scansiona gli identificatori o le parole chiave (3)
 		if (letters.contains(peekChar())) {
 			return scanId();
 		}
 
-		// // Scansiona gli operatori (4)
-		// if (operTkType.containsKey(nextChar)) {
-		// 	return scanOperator();
-		// }
+		// Scansiona gli operatori (4)
+		if (operTkType.containsKey(peekChar())) {
+			return scanOperator();
+		}
 
-		// if (delimTkType.containsKey(nextChar)) {
-		// 	return new Token(delimTkType.get(nextChar), riga); // Restituisce il token associato al delimitatore
-		// }
+		if (delimTkType.containsKey(peekChar())) {
+			return new Token(delimTkType.get(readChar()), riga); // Restituisce il token associato al delimitatore
+		}
 
-		throw new LexicalException(riga, "Invalid character");
+		StringBuilder sb = new StringBuilder();
+		while(!delimTkType.containsKey(peekChar())) {
+			sb.append(readChar());
+		}
+		
+		throw new LexicalException(riga, sb.toString());
 	}
 
 	/**
-	 * Scansiona un identificatore o una parola chiave.
-	 * Un identificatore può essere una parola chiave (come "int", "float", "print")
-	 * o un identificatore generico.
+	 * Scansiona un identificatore o una parola chiave. Un identificatore può essere
+	 * una parola chiave (come "int", "float", "print") o un identificatore
+	 * generico.
 	 * 
 	 * @return il token identificatore o parola chiave
 	 * @throws IOException se si verifica un errore di lettura
@@ -170,7 +168,7 @@ public class Scanner {
 		while (letters.contains(peekChar()) || digits.contains(peekChar())) {
 			idValue.append(readChar());
 		}
-		
+
 		String id = idValue.toString();
 		if (keyWordsTkType.containsKey(id)) {
 			return new Token(keyWordsTkType.get(id), riga); // Parola chiave
@@ -180,7 +178,8 @@ public class Scanner {
 	}
 
 	/**
-	 * Scansiona un operatore. Gli operatori riconosciuti includono +, -, *, / e le operazioni con assegnamento (+=, -=, /=, *=)
+	 * Scansiona un operatore. Gli operatori riconosciuti includono +, -, *, / e le
+	 * operazioni con assegnamento (+=, -=, /=, *=)
 	 * 
 	 * @return il token dell'operatore trovato
 	 * @throws IOException      se si verifica un errore di lettura
@@ -190,7 +189,7 @@ public class Scanner {
 		char opChar = readChar(); // Leggi il carattere dell'operatore
 
 		// Se è un operatore base come +, -, *, /, ritorna il relativo token
-		TokenType type = operTkType.get(opChar);			
+		TokenType type = operTkType.get(opChar);
 
 		if (peekChar() == '=' && type != null) {
 			StringBuilder sb = new StringBuilder();
@@ -198,8 +197,8 @@ public class Scanner {
 			sb.append(readChar());
 			return new Token(TokenType.OP_ASSIGN, riga, sb.toString());
 		}
-		
-		if(type != null)
+
+		if (type != null)
 			return new Token(type, riga);
 
 		// Se il carattere non è un operatore valido, lancia un'eccezione
@@ -207,8 +206,8 @@ public class Scanner {
 	}
 
 	/**
-	 * Scansiona un numero intero o decimale.
-	 * I numeri possono essere interi (es. 123) o decimali (es. 12.34).
+	 * Scansiona un numero intero o decimale. I numeri possono essere interi (es.
+	 * 123) o decimali (es. 12.34).
 	 * 
 	 * @return il token del numero trovato
 	 * @throws IOException      se si verifica un errore di lettura
@@ -216,35 +215,34 @@ public class Scanner {
 	 */
 	private Token scanNumber() throws IOException, LexicalException {
 		StringBuilder numberValue = new StringBuilder();
-		char nextChar = readChar();
-		numberValue.append(nextChar);
+		numberValue.append(readChar());
+		int conta = 0;
 
-		boolean isFloat = false;
-		nextChar = readChar();
-
-		// Continua a leggere caratteri numerici o un punto per decimali
-		while (digits.contains(nextChar) || (nextChar == '.' && !isFloat)) {
-			if (nextChar == '.') {
-				isFloat = true; // Flag per numeri decimali
-			}
-			numberValue.append(nextChar);
-			nextChar = readChar();
+		while (digits.contains(peekChar())) {
+			numberValue.append(readChar());
 		}
 
-		buffer.unread(nextChar);
-
-		String numberStr = numberValue.toString();
-		try {
-			if (isFloat) {
-				Float.parseFloat(numberStr);
-				return new Token(TokenType.FLOAT, riga, numberStr); // TokenType.FLOAT per numeri decimali
-			} else {
-				Integer.parseInt(numberStr);
-				return new Token(TokenType.INT, riga, numberStr); // TokenType.INT per numeri interi
+		if (peekChar() == '.') {
+			numberValue.append(readChar());
+			while (digits.contains(peekChar())) {
+				numberValue.append(readChar());
+				conta++;
 			}
-		} catch (NumberFormatException e) {
-			throw new LexicalException(riga, numberStr); // Se la conversione fallisce
 		}
+
+		if (conta > 5)
+			throw new LexicalException(riga, numberValue.toString());
+
+		//if (skpChars.contains(peekChar()) || delimTkType.containsKey(peekChar())) {
+			if (numberValue.toString().contains("."))
+				return new Token(TokenType.FLOAT, riga, numberValue.toString()); // TokenType.FLOAT per numeri decimali
+			else
+				return new Token(TokenType.INT, riga, numberValue.toString()); // TokenType.INT per numeri interi
+		//}		
+		
+
+		//throw new LexicalException(riga, numberValue.toString()); // Se la conversione fallisce
+
 	}
 
 	/**
