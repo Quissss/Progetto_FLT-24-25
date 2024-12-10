@@ -1,6 +1,5 @@
 package parser;
 
-
 import exception.LexicalException;
 import exception.SyntacticException;
 import scanner.Scanner;
@@ -87,7 +86,7 @@ public class Parser {
 
 	}
 
-	private void parseDcl() throws  SyntacticException {
+	private void parseDcl() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -96,9 +95,19 @@ public class Parser {
 			throw new SyntacticException(e.getMessage());
 		}
 
+		switch (tk.getType()) {
+		// Dcl -> Ty id DclP
+		case TYFLOAT, TYINT -> {
+
+		}
+		default -> {
+			throw new SyntacticException(tk.getRow(), "TYFLOAT o TYINT", tk.getType());
+		}
+		}
+
 	}
 
-	private void parseTy() throws  SyntacticException {
+	private void parseTy() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -107,15 +116,49 @@ public class Parser {
 			throw new SyntacticException(e.getMessage());
 		}
 
+		switch (tk.getType()) {
+		// Ty -> float
+		case TYFLOAT -> {
+			match(TokenType.TYFLOAT);
+
+		}
+		// Ty -> int
+		case TYINT -> {
+			match(TokenType.TYINT);
+
+		}
+		default -> {
+			throw new SyntacticException(tk.getRow(), "TYFLOAT o TYINT", tk.getType());
+		}
+		}
+
 	}
 
-	private void parseDclP() throws  SyntacticException {
+	private void parseDclP() throws SyntacticException {
 		Token tk;
 
 		try {
 			tk = scanner.peekToken();
 		} catch (LexicalException e) {
 			throw new SyntacticException(e.getMessage());
+		}
+
+		switch (tk.getType()) {
+		// DclP -> ;
+		case SEMI -> {
+			match(TokenType.SEMI);
+
+		}
+		// DclP -> = Exp ;
+		case ASSIGN -> {
+			match(TokenType.ASSIGN);
+
+			match(TokenType.SEMI);
+
+		}
+		default -> {
+			throw new SyntacticException(tk.getRow(), "SEMI o OP_ASSIGN", tk.getType());
+		}
 		}
 
 	}
@@ -142,7 +185,7 @@ public class Parser {
 
 	}
 
-	private void parseExpP() throws  SyntacticException {
+	private void parseExpP() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -153,7 +196,7 @@ public class Parser {
 
 	}
 
-	private void parseTr() throws  SyntacticException {
+	private void parseTr() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -175,7 +218,7 @@ public class Parser {
 
 	}
 
-	private void parseVal() throws  SyntacticException {
+	private void parseVal() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -186,7 +229,7 @@ public class Parser {
 
 	}
 
-	private void parseOp() throws  SyntacticException {
+	private void parseOp() throws SyntacticException {
 		Token tk;
 
 		try {
