@@ -147,10 +147,10 @@ public class Scanner {
 
 		// Panic mode
 		StringBuilder sb = new StringBuilder();
-		while((!delimTkType.containsKey(peekChar()) || !skpChars.contains(peekChar())) && peekChar() != '\n') {
+		while ((!delimTkType.containsKey(peekChar()) && !skpChars.contains(peekChar())) && peekChar() != '\n') {
 			sb.append(readChar());
 		}
-		
+
 		throw new LexicalException(riga, sb.toString());
 	}
 
@@ -234,15 +234,10 @@ public class Scanner {
 		if (conta > 5)
 			throw new LexicalException(riga, numberValue.toString());
 
-		//if (skpChars.contains(peekChar()) || delimTkType.containsKey(peekChar())) {
-			if (numberValue.toString().contains("."))
-				return new Token(TokenType.FLOAT, riga, numberValue.toString()); // TokenType.FLOAT per numeri decimali
-			else
-				return new Token(TokenType.INT, riga, numberValue.toString()); // TokenType.INT per numeri interi
-		//}		
-		
-
-		//throw new LexicalException(riga, numberValue.toString()); // Se la conversione fallisce
+		if (numberValue.toString().contains("."))
+			return new Token(TokenType.FLOAT, riga, numberValue.toString()); // TokenType.FLOAT per numeri decimali
+		else
+			return new Token(TokenType.INT, riga, numberValue.toString()); // TokenType.INT per numeri interi
 
 	}
 
