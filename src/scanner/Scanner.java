@@ -145,8 +145,9 @@ public class Scanner {
 			return new Token(delimTkType.get(readChar()), riga); // Restituisce il token associato al delimitatore
 		}
 
+		// Panic mode
 		StringBuilder sb = new StringBuilder();
-		while(!delimTkType.containsKey(peekChar())) {
+		while((!delimTkType.containsKey(peekChar()) || !skpChars.contains(peekChar())) && peekChar() != '\n') {
 			sb.append(readChar());
 		}
 		

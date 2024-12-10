@@ -31,12 +31,12 @@ class TestScanner {
 		
 		assertEquals("0", scanner.nextToken().getValue());
 		assertEquals("33", scanner.nextToken().getValue());
-
-		e = assertThrows(LexicalException.class, () -> scanner.nextToken());
+		e = assertThrows(LexicalException.class, scanner::nextToken);
 		assertEquals("Errore lessicale alla riga 3: sequenza di caratteri '123.121212' non valida", e.getMessage());
-		e = assertThrows(LexicalException.class, () -> scanner.nextToken());
-		assertEquals("Errore lessicale alla riga 5: sequenza di caratteri '123.123' non valida", e.getMessage());
-		assertEquals(TokenType.EOF, scanner.nextToken().getValue());
+		var t = assertDoesNotThrow(scanner::nextToken);
+		assertEquals(t, new Token(TokenType.FLOAT, 5, "123.123"));
+		assertThrows(LexicalException.class, scanner::nextToken);
+		assertEquals(TokenType.EOF, scanner.nextToken().getType());
 		
 	}
 
