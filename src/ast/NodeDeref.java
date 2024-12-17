@@ -4,7 +4,7 @@ package ast;
  * Implementa il nodo NodeDeref dell'AST.
  * @author Benetti Luca 20043903
  */
-public class NodeDeref {
+public class NodeDeref extends NodeExpr {
 
 	private NodeId id;
 

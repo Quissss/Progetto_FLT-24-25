@@ -5,7 +5,7 @@ package ast;
  * Implementa il nodo NodeAssign dell'AST.
  * @author Benetti Luca 20043903
  */
-public class NodeAssing extends NodeStm{
+public class NodeAssign extends NodeStm{
 	
 	NodeId id; 
 	NodeExpr expr;
@@ -16,7 +16,7 @@ public class NodeAssing extends NodeStm{
 	 * @param id   il nome dell'id
 	 * @param expr l'espressione assegnata all'id
 	 */
-	public NodeAssing(NodeId id, NodeExpr expr) {
+	public NodeAssign(NodeId id, NodeExpr expr) {
 		this.id = id;
 		this.expr = expr;
 	}

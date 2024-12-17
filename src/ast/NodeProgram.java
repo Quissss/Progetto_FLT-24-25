@@ -38,9 +38,9 @@ public class NodeProgram extends NodeAST {
         StringBuilder builder = new StringBuilder();
         for(NodeAST node : decSts)
         {
-            builder.append(node.toString());
+            builder.append(node.toString()).append("  ");
         }
-        return "[Program:" + builder.toString() + "]";
+        return "[Program:" + builder.toString().trim() + "]";
     }
 
 	

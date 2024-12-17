@@ -117,4 +117,16 @@ class TestParser {
 
 		Assertions.assertDoesNotThrow(() -> parser.parse());
 	}
+	
+	@Test
+	void testParserSenzaInit() throws FileNotFoundException, SyntacticException {
+		Scanner scanner = new Scanner("src/test/data/TestParser/testParserSenzaInit.txt");
+		Parser parser = new Parser(scanner);
+
+		var program=Assertions.assertDoesNotThrow(() -> parser.parse());
+		
+		assertEquals(program.toString(),"[Program:NodeDecl [id=NodeId [name=temp], type=INT, init=null]  NodePrint [id=NodeId [name=temp]]  NodeDecl [id=NodeId [name=temp1], type=FLOAT, init=null]  NodePrint [id=NodeId [name=temp1]]]");
+		
+	}
+	
 }

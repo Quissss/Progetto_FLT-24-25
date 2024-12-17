@@ -1,5 +1,20 @@
 package parser;
 
+import java.util.ArrayList;
+
+import ast.LangOper;
+import ast.LangType;
+import ast.NodeAssign;
+import ast.NodeBinOp;
+import ast.NodeCost;
+import ast.NodeDecSt;
+import ast.NodeDecl;
+import ast.NodeDeref;
+import ast.NodeExpr;
+import ast.NodeId;
+import ast.NodePrint;
+import ast.NodeProgram;
+import ast.NodeStm;
 import exception.LexicalException;
 import exception.SyntacticException;
 import scanner.Scanner;
@@ -31,11 +46,11 @@ public class Parser {
 			throw new SyntacticException(tk.getRow(), type, tk.getType());
 	}
 
-	public void parse() throws SyntacticException {
-		this.parsePrg();
+	public NodeProgram parse() throws SyntacticException {
+		return this.parsePrg();
 	}
 
-	private void parsePrg() throws SyntacticException {
+	private NodeProgram  parsePrg() throws SyntacticException {
 		Token tk = null;
 
 		try {
@@ -47,16 +62,20 @@ public class Parser {
 		switch (tk.getType()) {
 		// Prg -> DSs $
 		case TYFLOAT, TYINT, ID, PRINT, EOF -> {
+			ArrayList<NodeDecSt> prg = parseDSs();
 			parseDSs();
 			match(TokenType.EOF);
+			return new NodeProgram(prg);
 		}
 		default -> {
+			match(TokenType.SEMI);
+			parse();
 			throw new SyntacticException(tk.getRow(), "TYFLOAT, TYINT, ID, PRINT o EOF", tk.getType());
 		}
 		}
 	}
 
-	private void parseDSs() throws SyntacticException {
+	private ArrayList<NodeDecSt> parseDSs() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -68,19 +87,23 @@ public class Parser {
 		switch (tk.getType()) {
 		// DSs -> Dcl DSs
 		case TYFLOAT, TYINT -> {
-			parseDcl();
-			parseDSs();
+			NodeDecl decl= parseDcl();
+			ArrayList<NodeDecSt> decSts = parseDSs();
+			decSts.add(0, decl);
+			return decSts;
 		}
 
 		// DSs -> Stm DSs
 		case ID, PRINT -> {
-			parseStm();
-			parseDSs();
+			NodeStm stm = parseStm();
+			ArrayList<NodeDecSt> decSts = parseDSs();
+			decSts.add(0, stm);
+			return decSts;
 		}
 
 		// DSs -> ϵ
 		case EOF -> {
-
+			return new ArrayList<NodeDecSt>();
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "TYFLOAT, TYINT o ID, PRINT o EOF", tk.getType());
@@ -89,7 +112,7 @@ public class Parser {
 
 	}
 
-	private void parseDcl() throws SyntacticException {
+	private NodeDecl  parseDcl() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -101,9 +124,10 @@ public class Parser {
 		switch (tk.getType()) {
 		// Dcl -> Ty id DclP
 		case TYFLOAT, TYINT -> {
-			parseTy();
-			match(TokenType.ID);
-			parseDclP();
+			LangType ty = parseTy();
+			NodeId id = new NodeId(match(TokenType.ID).getValue());
+			NodeExpr dclP = parseDclP();
+			return new NodeDecl(id, ty, dclP);
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "TYFLOAT , TYINT", tk.getType());
@@ -112,7 +136,7 @@ public class Parser {
 
 	}
 
-	private void parseTy() throws SyntacticException {
+	private LangType  parseTy() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -125,12 +149,12 @@ public class Parser {
 		// Ty -> float
 		case TYFLOAT -> {
 			match(TokenType.TYFLOAT);
-
+			return LangType.FLOAT;
 		}
 		// Ty -> int
 		case TYINT -> {
 			match(TokenType.TYINT);
-
+			return LangType.INT;
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "TYFLOAT o TYINT", tk.getType());
@@ -139,7 +163,7 @@ public class Parser {
 
 	}
 
-	private void parseDclP() throws SyntacticException {
+	private NodeExpr parseDclP() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -152,13 +176,14 @@ public class Parser {
 		// DclP -> ;
 		case SEMI -> {
 			match(TokenType.SEMI);
-
+			return null;
 		}
 		// DclP -> = Exp ;
 		case ASSIGN -> {
 			match(TokenType.ASSIGN);
-			parseExp();
+			NodeExpr exp = parseExp();
 			match(TokenType.SEMI);
+			return exp;
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "SEMI o OP_ASSIGN", tk.getType());
@@ -167,7 +192,7 @@ public class Parser {
 
 	}
 
-	private void parseStm() throws SyntacticException {
+	private NodeStm parseStm() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -180,18 +205,18 @@ public class Parser {
 		// Stm -> id Op Exp ;
 		case ID -> {
 
-			match(TokenType.ID);
+			NodeId id = new NodeId(match(TokenType.ID).getValue());
 			parseOp();
-			parseExp();
+			NodeExpr exp = parseExp();   //da finire
 			match(TokenType.SEMI);
-
+			return new NodeAssign(id, exp);
 		}
 		// Stm -> print id ;
 		case PRINT -> {
 			match(TokenType.PRINT);
-			match(TokenType.ID);
+			NodeId id = new NodeId(match(TokenType.ID).getValue());
 			match(TokenType.SEMI);
-
+			return new NodePrint(id);
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "ID o PRINT", tk.getType());
@@ -200,7 +225,7 @@ public class Parser {
 
 	}
 
-	private void parseExp() throws SyntacticException {
+	private NodeExpr parseExp() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -212,8 +237,9 @@ public class Parser {
 		switch (tk.getType()) {
 		// Exp -> Tr ExpP
 		case ID, FLOAT, INT -> {
-			parseTr();
-			parseExpP();
+			NodeExpr tr = parseTr();
+			NodeExpr expP = parseExpP(tr);
+			return expP;
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "ID, FLOAT , INT", tk.getType());
@@ -222,7 +248,7 @@ public class Parser {
 
 	}
 
-	private void parseExpP() throws SyntacticException {
+	private NodeExpr parseExpP(NodeExpr left) throws SyntacticException {
 		Token tk;
 
 		try {
@@ -235,18 +261,20 @@ public class Parser {
 		// Exp -> + Tr ExpP
 		case PLUS -> {
 			match(TokenType.PLUS);
-			parseTr();
-			parseExpP();
+			NodeExpr tr = parseTr();
+			NodeExpr expP = parseExpP(tr);
+			return new NodeBinOp(LangOper.PLUS, left, expP);
 		}
 		// Exp -> - Tr ExpP
 		case MINUS -> {
 			match(TokenType.MINUS);
-			parseTr();
-			parseExpP();
+			NodeExpr tr = parseTr();
+			NodeExpr expP = parseExpP(tr);
+			return new NodeBinOp(LangOper.MINUS, left, expP);
 		}
 		// Exp -> ϵ
 		case SEMI -> {
-
+			return left;
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "PLUS o MINUS o SEMI", tk.getType());
@@ -255,7 +283,7 @@ public class Parser {
 
 	}
 
-	private void parseTr() throws SyntacticException {
+	private NodeExpr parseTr() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -266,8 +294,9 @@ public class Parser {
 		switch (tk.getType()) {
 		// Tr -> Val TrP
 		case ID, FLOAT, INT -> {
-			parseVal();
-			parseTrP();
+			NodeExpr val = parseVal();
+			NodeExpr trP = parseTrP(val);
+			return trP;
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "ID, FLOAT, INT", tk.getType());
@@ -276,7 +305,7 @@ public class Parser {
 
 	}
 
-	private void parseTrP() throws SyntacticException {
+	private NodeExpr  parseTrP(NodeExpr left) throws SyntacticException {
 		Token tk;
 
 		try {
@@ -288,18 +317,20 @@ public class Parser {
 		// TrP -> * Val TrP
 		case TIMES -> {
 			match(TokenType.TIMES);
-			parseVal();
-			parseTrP();
+			NodeExpr val = parseVal();
+			NodeExpr trP = parseTrP(val);
+			return new NodeBinOp(LangOper.TIMES, left, trP);
 		}
 		// TrP -> / Val TrP
 		case DIVIDE -> {
 			match(TokenType.DIVIDE);
-			parseVal();
-			parseTrP();
+			NodeExpr val = parseVal();
+			NodeExpr trP = parseTrP(val);
+			return new NodeBinOp(LangOper.DIV, left, trP);
 		}
 		// TrP -> ϵ
 		case MINUS, PLUS, SEMI -> {
-
+			return left;
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "TIMES o DIVIDE o MINUS, PLUS, SEMI", tk.getType());
@@ -308,7 +339,7 @@ public class Parser {
 
 	}
 
-	private void parseVal() throws SyntacticException {
+	private NodeExpr  parseVal() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -320,15 +351,18 @@ public class Parser {
 		switch (tk.getType()) {
 		// Val -> intVal
 		case INT -> {
-			match(TokenType.INT);
+			String intVal = match(TokenType.INT).getValue();
+			return new NodeCost(intVal, LangType.INT);
 		}
 		// Val -> floatVal
 		case FLOAT -> {
-			match(TokenType.FLOAT);
+			String floatVal = match(TokenType.FLOAT).getValue();
+			return new NodeCost(floatVal, LangType.FLOAT);
 		}
 		// Val -> id
 		case ID -> {
-			match(TokenType.ID);
+			String id = match(TokenType.ID).getValue();
+			return new NodeDeref(new NodeId(id));
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "INT o FLOAT o ID", tk.getType());
