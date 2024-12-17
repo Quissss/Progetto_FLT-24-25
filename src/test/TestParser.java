@@ -53,9 +53,7 @@ class TestParser {
 		Parser parser = new Parser(scanner);
 
 		Exception e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-
-		e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		assertEquals("Errore sintattico a riga 3: atteso TYFLOAT, TYINT, ID, PRINT o EOF, ma è INT",
+		assertEquals("Errore sintattico a riga 3: atteso TYFLOAT, TYINT o ID, PRINT o EOF, ma è INT",
 				e.getMessage());
 	}
 
@@ -65,9 +63,7 @@ class TestParser {
 		Parser parser = new Parser(scanner);
 
 		Exception e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		
-		e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		assertEquals("Errore sintattico a riga 2: atteso TYFLOAT, TYINT, ID, PRINT o EOF, ma è PLUS", e.getMessage());
+		assertEquals("Errore sintattico a riga 2: atteso ASSIGN O OP_ASSIGN, ma è PLUS", e.getMessage());
 	}
 
 	@Test
@@ -76,9 +72,7 @@ class TestParser {
 		Parser parser = new Parser(scanner);
 
 		Exception e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-
-		e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		assertEquals("Errore sintattico a riga 2: atteso TYFLOAT, TYINT, ID, PRINT o EOF, ma è INT", e.getMessage());
+		assertEquals("Errore sintattico a riga 2: atteso ID, ma è INT", e.getMessage());
 	}
 
 	@Test
@@ -87,9 +81,7 @@ class TestParser {
 		Parser parser = new Parser(scanner);
 
 		Exception e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-
-		e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		assertEquals("Errore sintattico a riga 3: atteso TYFLOAT, TYINT, ID, PRINT o EOF, ma è INT", e.getMessage());
+		assertEquals("Errore sintattico a riga 3: atteso ID, ma è INT", e.getMessage());
 	}
 
 	@Test
@@ -98,9 +90,7 @@ class TestParser {
 		Parser parser = new Parser(scanner);
 
 		Exception e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-
-		e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		assertEquals("Errore sintattico a riga 3: atteso ID, ma è SEMI", e.getMessage());
+		assertEquals("Errore sintattico a riga 3: atteso ID, ma è TYFLOAT", e.getMessage());
 	}
 
 	@Test
@@ -109,9 +99,7 @@ class TestParser {
 		Parser parser = new Parser(scanner);
 
 		Exception e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-
-		e = Assertions.assertThrows(SyntacticException.class, () -> parser.parse());
-		assertEquals("Errore sintattico a riga 2: atteso TYFLOAT, TYINT, ID, PRINT o EOF, ma è ASSIGN", e.getMessage());
+		assertEquals("Errore sintattico a riga 2: atteso ID, ma è ASSIGN", e.getMessage());
 	}
 	
 	@Test
