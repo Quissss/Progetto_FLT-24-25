@@ -129,4 +129,15 @@ class TestParser {
 		
 	}
 	
+	@Test
+	void testParser() throws FileNotFoundException, SyntacticException {
+		Scanner scanner = new Scanner("src/test/data/TestParser/testParser.txt");
+		Parser parser = new Parser(scanner);
+
+		var program=Assertions.assertDoesNotThrow(() -> parser.parse());
+		
+		assertEquals(program.toString(),"[Program:NodeDecl [id=NodeId [name=temp], type=INT, init=null]  NodeAssing [id=NodeId [name=temp], expr=NodeCost [value=7, type=INT]]  NodeDecl [id=NodeId [name=temp1], type=FLOAT, init=null]  NodeAssing [id=NodeId [name=temp1], expr=NodeBinOp [op=PLUS, left=NodeCost [value=3, type=INT], right=NodeBinOp [op=MINUS, left=NodeBinOp [op=TIMES, left=NodeCost [value=7, type=INT], right=NodeCost [value=5, type=INT]], right=NodeBinOp [op=DIV, left=NodeCost [value=6, type=INT], right=NodeCost [value=4, type=INT]]]]]]");
+		
+	}
+	
 }

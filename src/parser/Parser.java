@@ -207,7 +207,7 @@ public class Parser {
 
 			NodeId id = new NodeId(match(TokenType.ID).getValue());
 			parseOp();
-			NodeExpr exp = parseExp();   //da finire
+			NodeExpr exp = parseExp();  
 			match(TokenType.SEMI);
 			return new NodeAssign(id, exp);
 		}
