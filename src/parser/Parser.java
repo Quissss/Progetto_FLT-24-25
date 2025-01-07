@@ -50,7 +50,7 @@ public class Parser {
 		return this.parsePrg();
 	}
 
-	private NodeProgram  parsePrg() throws SyntacticException {
+	private NodeProgram parsePrg() throws SyntacticException {
 		Token tk = null;
 
 		try {
@@ -87,7 +87,7 @@ public class Parser {
 		switch (tk.getType()) {
 		// DSs -> Dcl DSs
 		case TYFLOAT, TYINT -> {
-			NodeDecl decl= parseDcl();
+			NodeDecl decl = parseDcl();
 			ArrayList<NodeDecSt> decSts = parseDSs();
 			decSts.add(0, decl);
 			return decSts;
@@ -112,7 +112,7 @@ public class Parser {
 
 	}
 
-	private NodeDecl  parseDcl() throws SyntacticException {
+	private NodeDecl parseDcl() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -136,7 +136,7 @@ public class Parser {
 
 	}
 
-	private LangType  parseTy() throws SyntacticException {
+	private LangType parseTy() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -207,7 +207,7 @@ public class Parser {
 
 			NodeId id = new NodeId(match(TokenType.ID).getValue());
 			parseOp();
-			NodeExpr exp = parseExp();  
+			NodeExpr exp = parseExp();
 			match(TokenType.SEMI);
 			return new NodeAssign(id, exp);
 		}
@@ -305,7 +305,7 @@ public class Parser {
 
 	}
 
-	private NodeExpr  parseTrP(NodeExpr left) throws SyntacticException {
+	private NodeExpr parseTrP(NodeExpr left) throws SyntacticException {
 		Token tk;
 
 		try {
@@ -339,7 +339,7 @@ public class Parser {
 
 	}
 
-	private NodeExpr  parseVal() throws SyntacticException {
+	private NodeExpr parseVal() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -370,7 +370,7 @@ public class Parser {
 		}
 	}
 
-	private void parseOp() throws SyntacticException {
+	private LangOper parseOp() throws SyntacticException {
 		Token tk;
 
 		try {
@@ -383,15 +383,29 @@ public class Parser {
 		// Op → =
 		case ASSIGN -> {
 			match(TokenType.ASSIGN);
+			return null;
 		}
 		// Op → opAss
 		case OP_ASSIGN -> {
 			match(TokenType.OP_ASSIGN);
+			String operator = tk.getValue();
+			switch (operator) {
+			case "+=":
+				return LangOper.PLUS;
+			case "-=":
+				return LangOper.MINUS;
+			case "*=":
+				return LangOper.TIMES;
+			case "/=":
+				return LangOper.DIV;
+			}
+
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "ASSIGN O OP_ASSIGN", tk.getType());
 		}
 		}
+		return null;
 
 	}
 }

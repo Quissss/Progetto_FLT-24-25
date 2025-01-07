@@ -1,5 +1,5 @@
-/symbolTable/
-/ast/
+/parser/
+/test/
 /visitor/
 /exception/
-/test/
+/symbolTable/

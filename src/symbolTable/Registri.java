@@ -9,7 +9,7 @@ public class Registri {
 	static ArrayList<Character> caratteri;
 
 	/**
-	 * Inizializza i registri, uno per lettera dell'alfabeto (inglese).
+	 * Inizializza i registri, per ogni lettera dell'alfabeto .
 	 */
 	public static void inizializza() {
 		caratteri = new ArrayList<Character>();
@@ -19,7 +19,7 @@ public class Registri {
 	}
 
 	/**
-	 * Restituisce un nuovo registro.
+	 * Restituisce un nuovo registro .
 	 * 
 	 * @return un nuovo registro
 	 * @throws CodeGeneratorException se tutti i registri sono in uso

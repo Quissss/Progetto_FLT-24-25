@@ -62,7 +62,7 @@ class TestTypeChecking {
 		var tcVisit = new TypeCheckingVisitor();
 		nP.accept(tcVisit);
 		
-		/* il log è vuoto perchè non sono stati riscontrati errori */
+		/* il log è vuoto perchè non ci sono errori*/
 		assertEquals(tcVisit.getLog(), "");
 	}
 	
@@ -72,7 +72,7 @@ class TestTypeChecking {
 		var tcVisit = new TypeCheckingVisitor();
 		nP.accept(tcVisit);
 		
-		/* il log è vuoto perchè non sono stati riscontrati errori */
+		/* il log è vuoto perchè non ci sono errori */
 		assertEquals(tcVisit.getLog(), "");
 	}
 	
@@ -82,7 +82,7 @@ class TestTypeChecking {
 		var tcVisit = new TypeCheckingVisitor();
 		nP.accept(tcVisit);
 		
-		/* il log è vuoto perchè non sono stati riscontrati errori */
+		/* il log è vuoto perchè non ci sono errori */
 		assertEquals(tcVisit.getLog(), "");
 	}
 

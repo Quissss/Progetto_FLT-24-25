@@ -10,7 +10,7 @@ public class CodeGeneratorException extends Exception{
 	/**
 	 * Costruttore per CodeGeneratorException con messaggio.
 	 * 
-	 * @param msg il messaggio dell'eccezione
+	 * @param msg il messaggio dell'eccezione presente
 	 */
 	public CodeGeneratorException(String msg) {
 		super(msg);
