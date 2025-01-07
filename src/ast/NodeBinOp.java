@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodeBinOp dell'AST.
  * @author Benetti Luca 20043903
@@ -79,6 +81,13 @@ public class NodeBinOp extends NodeExpr{
 	@Override
 	public String toString() {
 		return "NodeBinOp [op=" + op + ", left=" + left + ", right=" + right + "]";
+	}
+
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	}  
 
 	

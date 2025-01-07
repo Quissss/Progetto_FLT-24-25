@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodeId dell'AST.
  * @author Benetti Luca 20043903
@@ -34,6 +36,14 @@ public class NodeId extends NodeAST {
 	@Override
 	public String toString() {
 		return "NodeId [name=" + name + "]";
+	}
+
+
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 
 	

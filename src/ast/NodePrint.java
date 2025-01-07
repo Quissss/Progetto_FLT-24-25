@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodePrint dell'AST.
  * @author Benetti Luca 20043903
@@ -31,6 +33,13 @@ public class NodePrint extends NodeStm {
 	@Override
 	public String toString() {
 		return "NodePrint [id=" + id + "]";
+	}
+
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	} 
 	
 	

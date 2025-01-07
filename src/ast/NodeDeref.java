@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodeDeref dell'AST.
  * @author Benetti Luca 20043903
@@ -30,6 +32,12 @@ public class NodeDeref extends NodeExpr {
 	@Override
 	public String toString() {
 		return "NodeDeref [id=" + id + "]";
+	}
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 
 		

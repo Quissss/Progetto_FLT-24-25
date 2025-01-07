@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodeConst dell'AST.
  * @author Benetti Luca 20043903
@@ -41,6 +43,12 @@ public class NodeCost extends NodeExpr{
 	@Override
 	public String toString() {
 		return "NodeCost [value=" + value + ", type=" + type + "]";
+	}
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 	
 	

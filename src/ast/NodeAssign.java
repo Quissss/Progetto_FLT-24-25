@@ -1,15 +1,17 @@
 package ast;
 
+import visitor.IVisitor;
 
 /**
  * Implementa il nodo NodeAssign dell'AST.
+ * 
  * @author Benetti Luca 20043903
  */
-public class NodeAssign extends NodeStm{
-	
-	NodeId id; 
+public class NodeAssign extends NodeStm {
+
+	NodeId id;
 	NodeExpr expr;
-	
+
 	/**
 	 * Costruttore per NodeAssign
 	 * 
@@ -21,7 +23,6 @@ public class NodeAssign extends NodeStm{
 		this.expr = expr;
 	}
 
-
 	/**
 	 * Restituisce l'id assegnato al NodeId.
 	 * 
@@ -30,7 +31,6 @@ public class NodeAssign extends NodeStm{
 	public NodeId getId() {
 		return id;
 	}
-
 
 	/**
 	 * Restituisce l'espressione assegnata al NodeId.
@@ -41,12 +41,14 @@ public class NodeAssign extends NodeStm{
 		return expr;
 	}
 
-
 	@Override
 	public String toString() {
 		return "NodeAssing [id=" + id + ", expr=" + expr + "]";
 	}
-	
-	
-	
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+	}
+
 }

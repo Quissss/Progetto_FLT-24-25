@@ -1,5 +1,7 @@
 package ast;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodeDecl dell'AST.
  * @author Benetti Luca 20043903
@@ -57,6 +59,13 @@ public class NodeDecl extends NodeDecSt{
 	@Override
 	public String toString() {
 		return "NodeDecl [id=" + id + ", type=" + type + ", init=" + init + "]";
+	}
+
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 
 	

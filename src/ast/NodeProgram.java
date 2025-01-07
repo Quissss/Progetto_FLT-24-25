@@ -3,6 +3,8 @@ package ast;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import visitor.IVisitor;
+
 /**
  * Implementa il nodo NodeProgram dell'AST.
  * @author Benetti Luca 20043903
@@ -42,6 +44,13 @@ public class NodeProgram extends NodeAST {
         }
         return "[Program:" + builder.toString().trim() + "]";
     }
+
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
+	}
 
 	
 }
