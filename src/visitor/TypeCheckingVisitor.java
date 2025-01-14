@@ -1,5 +1,6 @@
 package visitor;
 
+import ast.LangOper;
 import ast.NodeAssign;
 import ast.NodeBinOp;
 import ast.NodeCost;
@@ -100,16 +101,35 @@ public class TypeCheckingVisitor implements IVisitor {
 
 	@Override
 	public void visit(NodeBinOp node) {
-		node.getLeft().accept(this);
-		TypeDescriptor leftTD = resType;
-		node.getRight().accept(this);
-		TypeDescriptor rightTD = resType;
+	    // Visita i nodi figli e ottieni i TypeDescriptor
+	    node.getLeft().accept(this);
+	    TypeDescriptor leftTD = resType;
+	    node.getRight().accept(this);
+	    TypeDescriptor rightTD = resType;
 
-		if (leftTD.getTipo() == TipoTD.ERROR)
-			resType = leftTD;
-		else if (rightTD.getTipo() == TipoTD.ERROR)
-			resType = rightTD;
+	    // Se uno dei due tipi è un errore, restituisci l'errore
+	    if (leftTD.getTipo() == TipoTD.ERROR) {
+	        resType = leftTD;
+	        return;
+	    } else if (rightTD.getTipo() == TipoTD.ERROR) {
+	        resType = rightTD;
+	        return;
+	    }
 
+	    // Controlla se l'operatore è una divisione e i tipi sono FLOAT
+	    if (node.getOp() == LangOper.DIV &&
+	        leftTD.getTipo() == TipoTD.FLOAT &&
+	        rightTD.getTipo() == TipoTD.FLOAT) {
+	        // Modifica l'operatore in DIV_FLOAT
+	        node = new NodeBinOp(LangOper.DIV_FLOAT, node.getLeft(), node.getRight());
+	    }
+
+	    // Determina il tipo del risultato
+	    if (leftTD.getTipo() == TipoTD.FLOAT || rightTD.getTipo() == TipoTD.FLOAT) {
+	        resType = new TypeDescriptor(TipoTD.FLOAT);
+	    } else {
+	        resType = new TypeDescriptor(TipoTD.INT);
+	    }
 	}
 
 	@Override
