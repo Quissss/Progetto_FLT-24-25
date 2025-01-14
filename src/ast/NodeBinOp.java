@@ -25,6 +25,14 @@ public class NodeBinOp extends NodeExpr{
 		this.right = right;
 	}
 
+	/**
+     * Imposta un nuovo operatore per il NodeBinOp.
+     * 
+     * @param op il nuovo operatore
+     */
+    public void setOp(LangOper op) {
+        this.op = op;
+    }
 
 	/**
 	 * Restituisce l'operatore assegnato a un NodeBinOp.

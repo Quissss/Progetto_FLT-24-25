@@ -121,7 +121,7 @@ public class TypeCheckingVisitor implements IVisitor {
 	        leftTD.getTipo() == TipoTD.FLOAT &&
 	        rightTD.getTipo() == TipoTD.FLOAT) {
 	        // Modifica l'operatore in DIV_FLOAT
-	        node = new NodeBinOp(LangOper.DIV_FLOAT, node.getLeft(), node.getRight());
+	        node.setOp(LangOper.DIV_FLOAT);
 	    }
 
 	    // Determina il tipo del risultato
