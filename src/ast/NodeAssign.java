@@ -43,7 +43,7 @@ public class NodeAssign extends NodeStm {
 
 	@Override
 	public String toString() {
-		return "NodeAssing [id=" + id + ", expr=" + expr + "]";
+		return "NodeAssign [id=" + id + ", expr=" + expr + "]";
 	}
 
 	@Override

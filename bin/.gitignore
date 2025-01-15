@@ -3,3 +3,5 @@
 /visitor/
 /exception/
 /symbolTable/
+/.DS_Store
+/ast/

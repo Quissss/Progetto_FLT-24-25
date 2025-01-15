@@ -74,6 +74,9 @@ public class CodeGeneratorVisitor implements IVisitor {
 		case TIMES -> {
 			codiceDc = leftCodice + " " + rightCodice + " *";
 		}
+		case DIV_FLOAT ->{
+			codiceDc = leftCodice + " " + rightCodice + " 5 k / 0 k";
+		}
 		}
 	}
 
@@ -87,8 +90,8 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 		codiceDc = exprCodice + " s" + idCodice;
 		/* resetta la precisione se è stata modificata in precedenza */
-		if (codiceDc.contains("5 k"))
-			codiceDc = codiceDc.concat(" 0 k");
+		// if (codiceDc.contains("5 k"))
+		// codiceDc = codiceDc.concat(" 0 k");
 	}
 
 	@Override
@@ -118,8 +121,8 @@ public class CodeGeneratorVisitor implements IVisitor {
 
 			codiceDc = init + " s" + id;
 			/* resetta la precisione se è stata modificata in precedenza */
-			if (codiceDc.contains("5 k"))
-				codiceDc = codiceDc.concat(" 0 k");
+			// if (codiceDc.contains("5 k"))
+			// codiceDc = codiceDc.concat(" 0 k");
 		}
 	}
 
@@ -140,7 +143,6 @@ public class CodeGeneratorVisitor implements IVisitor {
 		codiceDc = "l" + codiceDc + " p P";
 	}
 
-
 	/**
 	 * Restituisce il log ottenuto dalla visita.
 	 * 
@@ -149,7 +151,5 @@ public class CodeGeneratorVisitor implements IVisitor {
 	public String getLog() {
 		return log;
 	}
-
-
 
 }

@@ -206,9 +206,13 @@ public class Parser {
 		case ID -> {
 
 			NodeId id = new NodeId(match(TokenType.ID).getValue());
-			parseOp();
+			LangOper op =parseOp();
 			NodeExpr exp = parseExp();
 			match(TokenType.SEMI);
+			if (op != null) {
+                NodeExpr left = new NodeDeref(id);
+                NodeBinOp binOp = new NodeBinOp(op, left, exp);
+                return new NodeAssign(id, binOp);}
 			return new NodeAssign(id, exp);
 		}
 		// Stm -> print id ;
@@ -399,7 +403,6 @@ public class Parser {
 			case "/=":
 				return LangOper.DIV;
 			}
-
 		}
 		default -> {
 			throw new SyntacticException(tk.getRow(), "ASSIGN O OP_ASSIGN", tk.getType());

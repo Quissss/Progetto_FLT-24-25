@@ -118,7 +118,7 @@ public class TypeCheckingVisitor implements IVisitor {
 
 	    // Controlla se l'operatore è una divisione e i tipi sono FLOAT
 	    if (node.getOp() == LangOper.DIV &&
-	        leftTD.getTipo() == TipoTD.FLOAT &&
+	        leftTD.getTipo() == TipoTD.FLOAT ||
 	        rightTD.getTipo() == TipoTD.FLOAT) {
 	        // Modifica l'operatore in DIV_FLOAT
 	        node.setOp(LangOper.DIV_FLOAT);
