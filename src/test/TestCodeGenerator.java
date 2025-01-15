@@ -38,7 +38,7 @@ class TestCodeGenerator {
 		
 		
 		assertEquals(cgVisit.getLog(), "");
-		assertEquals(cgVisit.getCodiceGenerato(), "0 sa la 1 + sa 6 sb  1.0 6 5 k / 0 k la lb / + sc la p P lb p P lc p P");
+		assertEquals(cgVisit.getCodiceGenerato(), "0 sa la 1 + sa 6 sb 1.0 6 5 k / 0 k la lb / + sc la p P lb p P lc p P");
 	}
 	
 	@Test
@@ -50,7 +50,7 @@ class TestCodeGenerator {
 		nP.accept(cgVisit);
 		
 		assertEquals(cgVisit.getLog(), "");
-		assertEquals(cgVisit.getCodiceGenerato(), "5 3 + sa la 0.5 5 k / 0 k sb la p P lb 4 5 k / 0 k sb  lb p P lb 1 - sc lc lb 5 k / 0 k sc lc p P");
+		assertEquals(cgVisit.getCodiceGenerato(), "5 3 + sa la 0.5 5 k / 0 k sb la p P lb 4 5 k / 0 k sb lb p P lb 1 - sc lc lb 5 k / 0 k sc lc p P");
 	}
 	
 	@Test

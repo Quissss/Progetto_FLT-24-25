@@ -42,9 +42,10 @@ public class CodeGeneratorVisitor implements IVisitor {
 	@Override
 	public void visit(NodeProgram node) {
 		for (NodeDecSt decSt : node.getDecSts()) {
-			if (log == "") {
+			if (log.isEmpty() || log.isBlank()) {
 				decSt.accept(this);
-				codiceGenerato += codiceDc + " ";
+				if (!codiceDc.isBlank())
+					codiceGenerato += codiceDc + " ";
 				codiceDc = "";
 			}
 			/* annulla il codice generato in caso di errore */
