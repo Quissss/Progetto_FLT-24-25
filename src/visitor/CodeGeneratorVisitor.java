@@ -90,9 +90,6 @@ public class CodeGeneratorVisitor implements IVisitor {
 		String idCodice = codiceDc;
 
 		codiceDc = exprCodice + " s" + idCodice;
-		/* resetta la precisione se è stata modificata in precedenza */
-		// if (codiceDc.contains("5 k"))
-		// codiceDc = codiceDc.concat(" 0 k");
 	}
 
 	@Override
@@ -121,9 +118,6 @@ public class CodeGeneratorVisitor implements IVisitor {
 			String id = codiceDc;
 
 			codiceDc = init + " s" + id;
-			/* resetta la precisione se è stata modificata in precedenza */
-			// if (codiceDc.contains("5 k"))
-			// codiceDc = codiceDc.concat(" 0 k");
 		}
 	}
 
