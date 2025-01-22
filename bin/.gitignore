@@ -1,7 +1,2 @@
-/parser/
-/test/
-/visitor/
+/doc/
 /exception/
-/symbolTable/
-/.DS_Store
-/ast/

@@ -43,7 +43,6 @@ public class LexicalException extends Exception {
     /**
      * Costruttore per creare un'eccezione wrappata
      * 
-     * @param message dell eccezione
      * @param e Eccezione incapsulata
      */
 	public LexicalException( Throwable e) {

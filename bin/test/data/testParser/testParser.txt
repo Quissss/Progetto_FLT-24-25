@@ -1,0 +1,4 @@
+int temp;
+temp += 7;
+float temp1;
+temp1 = 3 + 7 * 5 - 6 / 4 ;
